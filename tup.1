@@ -548,6 +548,9 @@ The name of the lowest level of the directory. For example, in foo/bar/Tupfile, 
 .fi
 Using this macro in foo/bar/Tupfile would then create foo/bar/libbar.a
 .TP
+.B %D
+Like %f, but is just the directory part of the file path. The basename is stripped off. For example, "src/foo.c" would become "src/".
+.TP
 .B %g
 The string that a glob operator matched. For example with the files a_text.txt and b_text.txt, the rule:
 .nf

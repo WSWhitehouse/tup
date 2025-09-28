@@ -4039,6 +4039,25 @@ static char *tup_printf(struct tupfile *tf, const char *cmd, int cmd_len,
 				 */
 				estring_append(&e, tent->name.s, tent->name.len);
 			}
+		} else if(*next == 'D') {
+			/* D: Expands to the directory portion of the current file path.
+			 *    Example: "path/to/file.txt" -> "path/to/"
+			 */
+			int first = 1;
+			if(nl->num_entries == 0) {
+				fprintf(tf->f, "tup error: %%D used in rule pattern and no input files were specified.\n");
+				return NULL;
+			}
+			TAILQ_FOREACH(nle, &nl->entries, list) {
+				if(!first) {
+					estring_append(&e, " ", 1);
+				}
+				int dirlen = nle->len - nle->baselen - (*p == '/' ? 1 : 0);
+				if (dirlen > 0) {
+					estring_append(&e, nle->path, dirlen);
+				}
+				first = 0;
+			}
 		} else if(*next == 'g') {
 			/* g: Expands to the "glob" portion of an *, ?, [] expansion.
 			 *    Given the filnames: a_text.txt, b_text.txt and c_text.txt,
